@@ -958,6 +958,73 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct user_regs_struct {
+pub r0: crate::ctypes::c_ulong,
+pub r1: crate::ctypes::c_ulong,
+pub r2: crate::ctypes::c_ulong,
+pub r3: crate::ctypes::c_ulong,
+pub r4: crate::ctypes::c_ulong,
+pub r5: crate::ctypes::c_ulong,
+pub r6: crate::ctypes::c_ulong,
+pub r7: crate::ctypes::c_ulong,
+pub r8: crate::ctypes::c_ulong,
+pub r9: crate::ctypes::c_ulong,
+pub r10: crate::ctypes::c_ulong,
+pub r11: crate::ctypes::c_ulong,
+pub r12: crate::ctypes::c_ulong,
+pub r13: crate::ctypes::c_ulong,
+pub r14: crate::ctypes::c_ulong,
+pub r15: crate::ctypes::c_ulong,
+pub r16: crate::ctypes::c_ulong,
+pub r17: crate::ctypes::c_ulong,
+pub r18: crate::ctypes::c_ulong,
+pub r19: crate::ctypes::c_ulong,
+pub r20: crate::ctypes::c_ulong,
+pub r21: crate::ctypes::c_ulong,
+pub r22: crate::ctypes::c_ulong,
+pub r23: crate::ctypes::c_ulong,
+pub r24: crate::ctypes::c_ulong,
+pub r25: crate::ctypes::c_ulong,
+pub r26: crate::ctypes::c_ulong,
+pub r27: crate::ctypes::c_ulong,
+pub r28: crate::ctypes::c_ulong,
+pub r29: crate::ctypes::c_ulong,
+pub r30: crate::ctypes::c_ulong,
+pub r31: crate::ctypes::c_ulong,
+pub sa0: crate::ctypes::c_ulong,
+pub lc0: crate::ctypes::c_ulong,
+pub sa1: crate::ctypes::c_ulong,
+pub lc1: crate::ctypes::c_ulong,
+pub m0: crate::ctypes::c_ulong,
+pub m1: crate::ctypes::c_ulong,
+pub usr: crate::ctypes::c_ulong,
+pub p3_0: crate::ctypes::c_ulong,
+pub gp: crate::ctypes::c_ulong,
+pub ugp: crate::ctypes::c_ulong,
+pub pc: crate::ctypes::c_ulong,
+pub cause: crate::ctypes::c_ulong,
+pub badva: crate::ctypes::c_ulong,
+pub cs0: crate::ctypes::c_ulong,
+pub cs1: crate::ctypes::c_ulong,
+pub pad1: crate::ctypes::c_ulong,
+}
+#[repr(C)]
+#[repr(align(8))]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub sc_regs: user_regs_struct,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: sigcontext,
+pub uc_sigmask: sigset_t,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulonglong,

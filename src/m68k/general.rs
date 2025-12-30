@@ -949,6 +949,31 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub sc_mask: crate::ctypes::c_ulong,
+pub sc_usp: crate::ctypes::c_ulong,
+pub sc_d0: crate::ctypes::c_ulong,
+pub sc_d1: crate::ctypes::c_ulong,
+pub sc_a0: crate::ctypes::c_ulong,
+pub sc_a1: crate::ctypes::c_ulong,
+pub sc_sr: crate::ctypes::c_ushort,
+pub sc_pc: crate::ctypes::c_ulong,
+pub sc_formatvec: crate::ctypes::c_ushort,
+pub sc_fpregs: [crate::ctypes::c_ulong; 6usize],
+pub sc_fpcntl: [crate::ctypes::c_ulong; 3usize],
+pub sc_fpstate: [crate::ctypes::c_uchar; 216usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: sigcontext,
+pub uc_sigmask: sigset_t,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulonglong,

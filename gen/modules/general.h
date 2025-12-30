@@ -51,6 +51,25 @@
 #include <linux/userfaultfd.h>
 #endif
 
+#if defined(__arm__) || defined(__m68k__)
+// ARM and m68k do not make these headers public, use the asm-generic ones
+#include <asm/sigcontext.h>
+#include <asm-generic/ucontext.h>
+#elif defined(__sparc__)
+// For some reason sparc calls it uctx.h
+#include <asm/uctx.h>
+#elif defined(__hexagon__)
+// Hexagon is broken due to the usage of an internal kernel macro, define it
+#define __aligned(x) __attribute__((__aligned__(x)))
+#include <asm/sigcontext.h>
+#include <asm/ucontext.h>
+#undef __aligned
+#else
+// For all other cases include it normally
+#include <asm/sigcontext.h>
+#include <asm/ucontext.h>
+#endif
+
 #define DT_UNKNOWN 0
 #define DT_FIFO    1
 #define DT_CHR     2

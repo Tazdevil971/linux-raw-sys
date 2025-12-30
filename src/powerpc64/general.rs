@@ -66,6 +66,19 @@ pub type sigevent_t = sigevent;
 pub type cc_t = crate::ctypes::c_uchar;
 pub type speed_t = crate::ctypes::c_uint;
 pub type tcflag_t = crate::ctypes::c_uint;
+pub type elf_greg_t64 = crate::ctypes::c_ulong;
+pub type elf_gregset_t64 = [elf_greg_t64; 48usize];
+pub type elf_greg_t32 = crate::ctypes::c_uint;
+pub type elf_gregset_t32 = [elf_greg_t32; 48usize];
+pub type compat_elf_gregset_t = elf_gregset_t32;
+pub type elf_greg_t = elf_greg_t64;
+pub type elf_gregset_t = elf_gregset_t64;
+pub type elf_fpreg_t = f64;
+pub type elf_fpregset_t = [elf_fpreg_t; 33usize];
+pub type elf_vrreg_t = __vector128;
+pub type elf_vrregset_t = [elf_vrreg_t; 34usize];
+pub type elf_vrregset_t32 = [elf_vrreg_t; 33usize];
+pub type elf_vsrreghalf_t32 = [elf_fpreg_t; 32usize];
 pub type __fsword_t = __kernel_long_t;
 pub type termios2 = termios;
 #[repr(C)]
@@ -988,6 +1001,69 @@ pub src: __u64,
 pub len: __u64,
 pub mode: __u64,
 pub move_: __s64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct pt_regs {
+pub gpr: [crate::ctypes::c_ulong; 32usize],
+pub nip: crate::ctypes::c_ulong,
+pub msr: crate::ctypes::c_ulong,
+pub orig_gpr3: crate::ctypes::c_ulong,
+pub ctr: crate::ctypes::c_ulong,
+pub link: crate::ctypes::c_ulong,
+pub xer: crate::ctypes::c_ulong,
+pub ccr: crate::ctypes::c_ulong,
+pub softe: crate::ctypes::c_ulong,
+pub trap: crate::ctypes::c_ulong,
+pub dar: crate::ctypes::c_ulong,
+pub dsisr: crate::ctypes::c_ulong,
+pub result: crate::ctypes::c_ulong,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ppc_debug_info {
+pub version: __u32,
+pub num_instruction_bps: __u32,
+pub num_data_bps: __u32,
+pub num_condition_regs: __u32,
+pub data_bp_alignment: __u32,
+pub sizeof_condition: __u32,
+pub features: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ppc_hw_breakpoint {
+pub version: __u32,
+pub trigger_type: __u32,
+pub addr_mode: __u32,
+pub condition_mode: __u32,
+pub addr: __u64,
+pub addr2: __u64,
+pub condition_value: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub _unused: [crate::ctypes::c_ulong; 4usize],
+pub signal: crate::ctypes::c_int,
+pub _pad0: crate::ctypes::c_int,
+pub handler: crate::ctypes::c_ulong,
+pub oldmask: crate::ctypes::c_ulong,
+pub regs: *mut pt_regs,
+pub gp_regs: elf_gregset_t,
+pub fp_regs: elf_fpregset_t,
+pub v_regs: *mut elf_vrreg_t,
+pub vmx_reserve: [crate::ctypes::c_long; 101usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_sigmask: sigset_t,
+pub __unused: [sigset_t; 15usize],
+pub uc_mcontext: sigcontext,
 }
 #[repr(C)]
 #[derive(Debug)]
@@ -2911,6 +2987,360 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const PT_R0: u32 = 0;
+pub const PT_R1: u32 = 1;
+pub const PT_R2: u32 = 2;
+pub const PT_R3: u32 = 3;
+pub const PT_R4: u32 = 4;
+pub const PT_R5: u32 = 5;
+pub const PT_R6: u32 = 6;
+pub const PT_R7: u32 = 7;
+pub const PT_R8: u32 = 8;
+pub const PT_R9: u32 = 9;
+pub const PT_R10: u32 = 10;
+pub const PT_R11: u32 = 11;
+pub const PT_R12: u32 = 12;
+pub const PT_R13: u32 = 13;
+pub const PT_R14: u32 = 14;
+pub const PT_R15: u32 = 15;
+pub const PT_R16: u32 = 16;
+pub const PT_R17: u32 = 17;
+pub const PT_R18: u32 = 18;
+pub const PT_R19: u32 = 19;
+pub const PT_R20: u32 = 20;
+pub const PT_R21: u32 = 21;
+pub const PT_R22: u32 = 22;
+pub const PT_R23: u32 = 23;
+pub const PT_R24: u32 = 24;
+pub const PT_R25: u32 = 25;
+pub const PT_R26: u32 = 26;
+pub const PT_R27: u32 = 27;
+pub const PT_R28: u32 = 28;
+pub const PT_R29: u32 = 29;
+pub const PT_R30: u32 = 30;
+pub const PT_R31: u32 = 31;
+pub const PT_NIP: u32 = 32;
+pub const PT_MSR: u32 = 33;
+pub const PT_ORIG_R3: u32 = 34;
+pub const PT_CTR: u32 = 35;
+pub const PT_LNK: u32 = 36;
+pub const PT_XER: u32 = 37;
+pub const PT_CCR: u32 = 38;
+pub const PT_SOFTE: u32 = 39;
+pub const PT_TRAP: u32 = 40;
+pub const PT_DAR: u32 = 41;
+pub const PT_DSISR: u32 = 42;
+pub const PT_RESULT: u32 = 43;
+pub const PT_DSCR: u32 = 44;
+pub const PT_REGS_COUNT: u32 = 44;
+pub const PT_FPR0: u32 = 48;
+pub const PT_FPSCR: u32 = 80;
+pub const PT_VR0: u32 = 82;
+pub const PT_VSCR: u32 = 147;
+pub const PT_VRSAVE: u32 = 148;
+pub const PT_VSR0: u32 = 150;
+pub const PT_VSR31: u32 = 212;
+pub const PTRACE_GETVRREGS: u32 = 18;
+pub const PTRACE_SETVRREGS: u32 = 19;
+pub const PTRACE_GETEVRREGS: u32 = 20;
+pub const PTRACE_SETEVRREGS: u32 = 21;
+pub const PTRACE_GETVSRREGS: u32 = 27;
+pub const PTRACE_SETVSRREGS: u32 = 28;
+pub const PTRACE_SYSEMU: u32 = 29;
+pub const PTRACE_SYSEMU_SINGLESTEP: u32 = 30;
+pub const PTRACE_GET_DEBUGREG: u32 = 25;
+pub const PTRACE_SET_DEBUGREG: u32 = 26;
+pub const PTRACE_GETREGS: u32 = 12;
+pub const PTRACE_SETREGS: u32 = 13;
+pub const PTRACE_GETFPREGS: u32 = 14;
+pub const PTRACE_SETFPREGS: u32 = 15;
+pub const PTRACE_GETREGS64: u32 = 22;
+pub const PTRACE_SETREGS64: u32 = 23;
+pub const PPC_PTRACE_PEEKTEXT_3264: u32 = 149;
+pub const PPC_PTRACE_PEEKDATA_3264: u32 = 148;
+pub const PPC_PTRACE_POKETEXT_3264: u32 = 147;
+pub const PPC_PTRACE_POKEDATA_3264: u32 = 146;
+pub const PPC_PTRACE_PEEKUSR_3264: u32 = 145;
+pub const PPC_PTRACE_POKEUSR_3264: u32 = 144;
+pub const PTRACE_SINGLEBLOCK: u32 = 256;
+pub const PPC_PTRACE_GETHWDBGINFO: u32 = 137;
+pub const PPC_PTRACE_SETHWDEBUG: u32 = 136;
+pub const PPC_PTRACE_DELHWDEBUG: u32 = 135;
+pub const PPC_DEBUG_FEATURE_INSN_BP_RANGE: u32 = 1;
+pub const PPC_DEBUG_FEATURE_INSN_BP_MASK: u32 = 2;
+pub const PPC_DEBUG_FEATURE_DATA_BP_RANGE: u32 = 4;
+pub const PPC_DEBUG_FEATURE_DATA_BP_MASK: u32 = 8;
+pub const PPC_DEBUG_FEATURE_DATA_BP_DAWR: u32 = 16;
+pub const PPC_DEBUG_FEATURE_DATA_BP_ARCH_31: u32 = 32;
+pub const PPC_BREAKPOINT_TRIGGER_EXECUTE: u32 = 1;
+pub const PPC_BREAKPOINT_TRIGGER_READ: u32 = 2;
+pub const PPC_BREAKPOINT_TRIGGER_WRITE: u32 = 4;
+pub const PPC_BREAKPOINT_TRIGGER_RW: u32 = 6;
+pub const PPC_BREAKPOINT_MODE_EXACT: u32 = 0;
+pub const PPC_BREAKPOINT_MODE_RANGE_INCLUSIVE: u32 = 1;
+pub const PPC_BREAKPOINT_MODE_RANGE_EXCLUSIVE: u32 = 2;
+pub const PPC_BREAKPOINT_MODE_MASK: u32 = 3;
+pub const PPC_BREAKPOINT_CONDITION_MODE: u32 = 3;
+pub const PPC_BREAKPOINT_CONDITION_NONE: u32 = 0;
+pub const PPC_BREAKPOINT_CONDITION_AND: u32 = 1;
+pub const PPC_BREAKPOINT_CONDITION_EXACT: u32 = 1;
+pub const PPC_BREAKPOINT_CONDITION_OR: u32 = 2;
+pub const PPC_BREAKPOINT_CONDITION_AND_OR: u32 = 3;
+pub const PPC_BREAKPOINT_CONDITION_BE_ALL: u32 = 16711680;
+pub const PPC_BREAKPOINT_CONDITION_BE_SHIFT: u32 = 16;
+pub const PPC_FEATURE_32: u32 = 2147483648;
+pub const PPC_FEATURE_64: u32 = 1073741824;
+pub const PPC_FEATURE_601_INSTR: u32 = 536870912;
+pub const PPC_FEATURE_HAS_ALTIVEC: u32 = 268435456;
+pub const PPC_FEATURE_HAS_FPU: u32 = 134217728;
+pub const PPC_FEATURE_HAS_MMU: u32 = 67108864;
+pub const PPC_FEATURE_HAS_4xxMAC: u32 = 33554432;
+pub const PPC_FEATURE_UNIFIED_CACHE: u32 = 16777216;
+pub const PPC_FEATURE_HAS_SPE: u32 = 8388608;
+pub const PPC_FEATURE_HAS_EFP_SINGLE: u32 = 4194304;
+pub const PPC_FEATURE_HAS_EFP_DOUBLE: u32 = 2097152;
+pub const PPC_FEATURE_NO_TB: u32 = 1048576;
+pub const PPC_FEATURE_POWER4: u32 = 524288;
+pub const PPC_FEATURE_POWER5: u32 = 262144;
+pub const PPC_FEATURE_POWER5_PLUS: u32 = 131072;
+pub const PPC_FEATURE_CELL: u32 = 65536;
+pub const PPC_FEATURE_BOOKE: u32 = 32768;
+pub const PPC_FEATURE_SMT: u32 = 16384;
+pub const PPC_FEATURE_ICACHE_SNOOP: u32 = 8192;
+pub const PPC_FEATURE_ARCH_2_05: u32 = 4096;
+pub const PPC_FEATURE_PA6T: u32 = 2048;
+pub const PPC_FEATURE_HAS_DFP: u32 = 1024;
+pub const PPC_FEATURE_POWER6_EXT: u32 = 512;
+pub const PPC_FEATURE_ARCH_2_06: u32 = 256;
+pub const PPC_FEATURE_HAS_VSX: u32 = 128;
+pub const PPC_FEATURE_PSERIES_PERFMON_COMPAT: u32 = 64;
+pub const PPC_FEATURE_TRUE_LE: u32 = 2;
+pub const PPC_FEATURE_PPC_LE: u32 = 1;
+pub const PPC_FEATURE2_ARCH_2_07: u32 = 2147483648;
+pub const PPC_FEATURE2_HTM: u32 = 1073741824;
+pub const PPC_FEATURE2_DSCR: u32 = 536870912;
+pub const PPC_FEATURE2_EBB: u32 = 268435456;
+pub const PPC_FEATURE2_ISEL: u32 = 134217728;
+pub const PPC_FEATURE2_TAR: u32 = 67108864;
+pub const PPC_FEATURE2_VEC_CRYPTO: u32 = 33554432;
+pub const PPC_FEATURE2_HTM_NOSC: u32 = 16777216;
+pub const PPC_FEATURE2_ARCH_3_00: u32 = 8388608;
+pub const PPC_FEATURE2_HAS_IEEE128: u32 = 4194304;
+pub const PPC_FEATURE2_DARN: u32 = 2097152;
+pub const PPC_FEATURE2_SCV: u32 = 1048576;
+pub const PPC_FEATURE2_HTM_NO_SUSPEND: u32 = 524288;
+pub const PPC_FEATURE2_ARCH_3_1: u32 = 262144;
+pub const PPC_FEATURE2_MMA: u32 = 131072;
+pub const AT_DCACHEBSIZE: u32 = 19;
+pub const AT_ICACHEBSIZE: u32 = 20;
+pub const AT_UCACHEBSIZE: u32 = 21;
+pub const AT_IGNOREPPC: u32 = 22;
+pub const AT_SYSINFO_EHDR: u32 = 33;
+pub const AT_L1I_CACHESIZE: u32 = 40;
+pub const AT_L1I_CACHEGEOMETRY: u32 = 41;
+pub const AT_L1D_CACHESIZE: u32 = 42;
+pub const AT_L1D_CACHEGEOMETRY: u32 = 43;
+pub const AT_L2_CACHESIZE: u32 = 44;
+pub const AT_L2_CACHEGEOMETRY: u32 = 45;
+pub const AT_L3_CACHESIZE: u32 = 46;
+pub const AT_L3_CACHEGEOMETRY: u32 = 47;
+pub const AT_MINSIGSTKSZ: u32 = 51;
+pub const AT_VECTOR_SIZE_ARCH: u32 = 15;
+pub const R_PPC_NONE: u32 = 0;
+pub const R_PPC_ADDR32: u32 = 1;
+pub const R_PPC_ADDR24: u32 = 2;
+pub const R_PPC_ADDR16: u32 = 3;
+pub const R_PPC_ADDR16_LO: u32 = 4;
+pub const R_PPC_ADDR16_HI: u32 = 5;
+pub const R_PPC_ADDR16_HA: u32 = 6;
+pub const R_PPC_ADDR14: u32 = 7;
+pub const R_PPC_ADDR14_BRTAKEN: u32 = 8;
+pub const R_PPC_ADDR14_BRNTAKEN: u32 = 9;
+pub const R_PPC_REL24: u32 = 10;
+pub const R_PPC_REL14: u32 = 11;
+pub const R_PPC_REL14_BRTAKEN: u32 = 12;
+pub const R_PPC_REL14_BRNTAKEN: u32 = 13;
+pub const R_PPC_GOT16: u32 = 14;
+pub const R_PPC_GOT16_LO: u32 = 15;
+pub const R_PPC_GOT16_HI: u32 = 16;
+pub const R_PPC_GOT16_HA: u32 = 17;
+pub const R_PPC_PLTREL24: u32 = 18;
+pub const R_PPC_COPY: u32 = 19;
+pub const R_PPC_GLOB_DAT: u32 = 20;
+pub const R_PPC_JMP_SLOT: u32 = 21;
+pub const R_PPC_RELATIVE: u32 = 22;
+pub const R_PPC_LOCAL24PC: u32 = 23;
+pub const R_PPC_UADDR32: u32 = 24;
+pub const R_PPC_UADDR16: u32 = 25;
+pub const R_PPC_REL32: u32 = 26;
+pub const R_PPC_PLT32: u32 = 27;
+pub const R_PPC_PLTREL32: u32 = 28;
+pub const R_PPC_PLT16_LO: u32 = 29;
+pub const R_PPC_PLT16_HI: u32 = 30;
+pub const R_PPC_PLT16_HA: u32 = 31;
+pub const R_PPC_SDAREL16: u32 = 32;
+pub const R_PPC_SECTOFF: u32 = 33;
+pub const R_PPC_SECTOFF_LO: u32 = 34;
+pub const R_PPC_SECTOFF_HI: u32 = 35;
+pub const R_PPC_SECTOFF_HA: u32 = 36;
+pub const R_PPC_TLS: u32 = 67;
+pub const R_PPC_DTPMOD32: u32 = 68;
+pub const R_PPC_TPREL16: u32 = 69;
+pub const R_PPC_TPREL16_LO: u32 = 70;
+pub const R_PPC_TPREL16_HI: u32 = 71;
+pub const R_PPC_TPREL16_HA: u32 = 72;
+pub const R_PPC_TPREL32: u32 = 73;
+pub const R_PPC_DTPREL16: u32 = 74;
+pub const R_PPC_DTPREL16_LO: u32 = 75;
+pub const R_PPC_DTPREL16_HI: u32 = 76;
+pub const R_PPC_DTPREL16_HA: u32 = 77;
+pub const R_PPC_DTPREL32: u32 = 78;
+pub const R_PPC_GOT_TLSGD16: u32 = 79;
+pub const R_PPC_GOT_TLSGD16_LO: u32 = 80;
+pub const R_PPC_GOT_TLSGD16_HI: u32 = 81;
+pub const R_PPC_GOT_TLSGD16_HA: u32 = 82;
+pub const R_PPC_GOT_TLSLD16: u32 = 83;
+pub const R_PPC_GOT_TLSLD16_LO: u32 = 84;
+pub const R_PPC_GOT_TLSLD16_HI: u32 = 85;
+pub const R_PPC_GOT_TLSLD16_HA: u32 = 86;
+pub const R_PPC_GOT_TPREL16: u32 = 87;
+pub const R_PPC_GOT_TPREL16_LO: u32 = 88;
+pub const R_PPC_GOT_TPREL16_HI: u32 = 89;
+pub const R_PPC_GOT_TPREL16_HA: u32 = 90;
+pub const R_PPC_GOT_DTPREL16: u32 = 91;
+pub const R_PPC_GOT_DTPREL16_LO: u32 = 92;
+pub const R_PPC_GOT_DTPREL16_HI: u32 = 93;
+pub const R_PPC_GOT_DTPREL16_HA: u32 = 94;
+pub const R_PPC_NUM: u32 = 95;
+pub const ELF_NGREG: u32 = 48;
+pub const ELF_NFPREG: u32 = 33;
+pub const ELF_NVMX: u32 = 34;
+pub const ELF_NVSX: u32 = 32;
+pub const ELF_NTMSPRREG: u32 = 3;
+pub const ELF_NEBB: u32 = 3;
+pub const ELF_NPMU: u32 = 5;
+pub const ELF_NPKEY: u32 = 3;
+pub const ELF_NDEXCR: u32 = 2;
+pub const ELF_NHASHKEYR: u32 = 1;
+pub const ELF_NVRREG32: u32 = 33;
+pub const ELF_NVRREG: u32 = 34;
+pub const ELF_NVSRHALFREG: u32 = 32;
+pub const R_PPC64_NONE: u32 = 0;
+pub const R_PPC64_ADDR32: u32 = 1;
+pub const R_PPC64_ADDR24: u32 = 2;
+pub const R_PPC64_ADDR16: u32 = 3;
+pub const R_PPC64_ADDR16_LO: u32 = 4;
+pub const R_PPC64_ADDR16_HI: u32 = 5;
+pub const R_PPC64_ADDR16_HA: u32 = 6;
+pub const R_PPC64_ADDR14: u32 = 7;
+pub const R_PPC64_ADDR14_BRTAKEN: u32 = 8;
+pub const R_PPC64_ADDR14_BRNTAKEN: u32 = 9;
+pub const R_PPC64_REL24: u32 = 10;
+pub const R_PPC64_REL14: u32 = 11;
+pub const R_PPC64_REL14_BRTAKEN: u32 = 12;
+pub const R_PPC64_REL14_BRNTAKEN: u32 = 13;
+pub const R_PPC64_GOT16: u32 = 14;
+pub const R_PPC64_GOT16_LO: u32 = 15;
+pub const R_PPC64_GOT16_HI: u32 = 16;
+pub const R_PPC64_GOT16_HA: u32 = 17;
+pub const R_PPC64_COPY: u32 = 19;
+pub const R_PPC64_GLOB_DAT: u32 = 20;
+pub const R_PPC64_JMP_SLOT: u32 = 21;
+pub const R_PPC64_RELATIVE: u32 = 22;
+pub const R_PPC64_UADDR32: u32 = 24;
+pub const R_PPC64_UADDR16: u32 = 25;
+pub const R_PPC64_REL32: u32 = 26;
+pub const R_PPC64_PLT32: u32 = 27;
+pub const R_PPC64_PLTREL32: u32 = 28;
+pub const R_PPC64_PLT16_LO: u32 = 29;
+pub const R_PPC64_PLT16_HI: u32 = 30;
+pub const R_PPC64_PLT16_HA: u32 = 31;
+pub const R_PPC64_SECTOFF: u32 = 33;
+pub const R_PPC64_SECTOFF_LO: u32 = 34;
+pub const R_PPC64_SECTOFF_HI: u32 = 35;
+pub const R_PPC64_SECTOFF_HA: u32 = 36;
+pub const R_PPC64_ADDR30: u32 = 37;
+pub const R_PPC64_ADDR64: u32 = 38;
+pub const R_PPC64_ADDR16_HIGHER: u32 = 39;
+pub const R_PPC64_ADDR16_HIGHERA: u32 = 40;
+pub const R_PPC64_ADDR16_HIGHEST: u32 = 41;
+pub const R_PPC64_ADDR16_HIGHESTA: u32 = 42;
+pub const R_PPC64_UADDR64: u32 = 43;
+pub const R_PPC64_REL64: u32 = 44;
+pub const R_PPC64_PLT64: u32 = 45;
+pub const R_PPC64_PLTREL64: u32 = 46;
+pub const R_PPC64_TOC16: u32 = 47;
+pub const R_PPC64_TOC16_LO: u32 = 48;
+pub const R_PPC64_TOC16_HI: u32 = 49;
+pub const R_PPC64_TOC16_HA: u32 = 50;
+pub const R_PPC64_TOC: u32 = 51;
+pub const R_PPC64_PLTGOT16: u32 = 52;
+pub const R_PPC64_PLTGOT16_LO: u32 = 53;
+pub const R_PPC64_PLTGOT16_HI: u32 = 54;
+pub const R_PPC64_PLTGOT16_HA: u32 = 55;
+pub const R_PPC64_ADDR16_DS: u32 = 56;
+pub const R_PPC64_ADDR16_LO_DS: u32 = 57;
+pub const R_PPC64_GOT16_DS: u32 = 58;
+pub const R_PPC64_GOT16_LO_DS: u32 = 59;
+pub const R_PPC64_PLT16_LO_DS: u32 = 60;
+pub const R_PPC64_SECTOFF_DS: u32 = 61;
+pub const R_PPC64_SECTOFF_LO_DS: u32 = 62;
+pub const R_PPC64_TOC16_DS: u32 = 63;
+pub const R_PPC64_TOC16_LO_DS: u32 = 64;
+pub const R_PPC64_PLTGOT16_DS: u32 = 65;
+pub const R_PPC64_PLTGOT16_LO_DS: u32 = 66;
+pub const R_PPC64_TLS: u32 = 67;
+pub const R_PPC64_DTPMOD64: u32 = 68;
+pub const R_PPC64_TPREL16: u32 = 69;
+pub const R_PPC64_TPREL16_LO: u32 = 70;
+pub const R_PPC64_TPREL16_HI: u32 = 71;
+pub const R_PPC64_TPREL16_HA: u32 = 72;
+pub const R_PPC64_TPREL64: u32 = 73;
+pub const R_PPC64_DTPREL16: u32 = 74;
+pub const R_PPC64_DTPREL16_LO: u32 = 75;
+pub const R_PPC64_DTPREL16_HI: u32 = 76;
+pub const R_PPC64_DTPREL16_HA: u32 = 77;
+pub const R_PPC64_DTPREL64: u32 = 78;
+pub const R_PPC64_GOT_TLSGD16: u32 = 79;
+pub const R_PPC64_GOT_TLSGD16_LO: u32 = 80;
+pub const R_PPC64_GOT_TLSGD16_HI: u32 = 81;
+pub const R_PPC64_GOT_TLSGD16_HA: u32 = 82;
+pub const R_PPC64_GOT_TLSLD16: u32 = 83;
+pub const R_PPC64_GOT_TLSLD16_LO: u32 = 84;
+pub const R_PPC64_GOT_TLSLD16_HI: u32 = 85;
+pub const R_PPC64_GOT_TLSLD16_HA: u32 = 86;
+pub const R_PPC64_GOT_TPREL16_DS: u32 = 87;
+pub const R_PPC64_GOT_TPREL16_LO_DS: u32 = 88;
+pub const R_PPC64_GOT_TPREL16_HI: u32 = 89;
+pub const R_PPC64_GOT_TPREL16_HA: u32 = 90;
+pub const R_PPC64_GOT_DTPREL16_DS: u32 = 91;
+pub const R_PPC64_GOT_DTPREL16_LO_DS: u32 = 92;
+pub const R_PPC64_GOT_DTPREL16_HI: u32 = 93;
+pub const R_PPC64_GOT_DTPREL16_HA: u32 = 94;
+pub const R_PPC64_TPREL16_DS: u32 = 95;
+pub const R_PPC64_TPREL16_LO_DS: u32 = 96;
+pub const R_PPC64_TPREL16_HIGHER: u32 = 97;
+pub const R_PPC64_TPREL16_HIGHERA: u32 = 98;
+pub const R_PPC64_TPREL16_HIGHEST: u32 = 99;
+pub const R_PPC64_TPREL16_HIGHESTA: u32 = 100;
+pub const R_PPC64_DTPREL16_DS: u32 = 101;
+pub const R_PPC64_DTPREL16_LO_DS: u32 = 102;
+pub const R_PPC64_DTPREL16_HIGHER: u32 = 103;
+pub const R_PPC64_DTPREL16_HIGHERA: u32 = 104;
+pub const R_PPC64_DTPREL16_HIGHEST: u32 = 105;
+pub const R_PPC64_DTPREL16_HIGHESTA: u32 = 106;
+pub const R_PPC64_TLSGD: u32 = 107;
+pub const R_PPC64_TLSLD: u32 = 108;
+pub const R_PPC64_TOCSAVE: u32 = 109;
+pub const R_PPC64_REL24_NOTOC: u32 = 116;
+pub const R_PPC64_ENTRY: u32 = 118;
+pub const R_PPC64_PCREL34: u32 = 132;
+pub const R_PPC64_GOT_PCREL34: u32 = 133;
+pub const R_PPC64_REL16: u32 = 249;
+pub const R_PPC64_REL16_LO: u32 = 250;
+pub const R_PPC64_REL16_HI: u32 = 251;
+pub const R_PPC64_REL16_HA: u32 = 252;
+pub const R_PPC64_NUM: u32 = 253;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;

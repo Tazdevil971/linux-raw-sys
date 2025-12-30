@@ -949,6 +949,40 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub trap_no: crate::ctypes::c_ulong,
+pub error_code: crate::ctypes::c_ulong,
+pub oldmask: crate::ctypes::c_ulong,
+pub arm_r0: crate::ctypes::c_ulong,
+pub arm_r1: crate::ctypes::c_ulong,
+pub arm_r2: crate::ctypes::c_ulong,
+pub arm_r3: crate::ctypes::c_ulong,
+pub arm_r4: crate::ctypes::c_ulong,
+pub arm_r5: crate::ctypes::c_ulong,
+pub arm_r6: crate::ctypes::c_ulong,
+pub arm_r7: crate::ctypes::c_ulong,
+pub arm_r8: crate::ctypes::c_ulong,
+pub arm_r9: crate::ctypes::c_ulong,
+pub arm_r10: crate::ctypes::c_ulong,
+pub arm_fp: crate::ctypes::c_ulong,
+pub arm_ip: crate::ctypes::c_ulong,
+pub arm_sp: crate::ctypes::c_ulong,
+pub arm_lr: crate::ctypes::c_ulong,
+pub arm_pc: crate::ctypes::c_ulong,
+pub arm_cpsr: crate::ctypes::c_ulong,
+pub fault_address: crate::ctypes::c_ulong,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: sigcontext,
+pub uc_sigmask: sigset_t,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulonglong,

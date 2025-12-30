@@ -955,6 +955,121 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct user_regs_struct {
+pub pc: crate::ctypes::c_ulong,
+pub ra: crate::ctypes::c_ulong,
+pub sp: crate::ctypes::c_ulong,
+pub gp: crate::ctypes::c_ulong,
+pub tp: crate::ctypes::c_ulong,
+pub t0: crate::ctypes::c_ulong,
+pub t1: crate::ctypes::c_ulong,
+pub t2: crate::ctypes::c_ulong,
+pub s0: crate::ctypes::c_ulong,
+pub s1: crate::ctypes::c_ulong,
+pub a0: crate::ctypes::c_ulong,
+pub a1: crate::ctypes::c_ulong,
+pub a2: crate::ctypes::c_ulong,
+pub a3: crate::ctypes::c_ulong,
+pub a4: crate::ctypes::c_ulong,
+pub a5: crate::ctypes::c_ulong,
+pub a6: crate::ctypes::c_ulong,
+pub a7: crate::ctypes::c_ulong,
+pub s2: crate::ctypes::c_ulong,
+pub s3: crate::ctypes::c_ulong,
+pub s4: crate::ctypes::c_ulong,
+pub s5: crate::ctypes::c_ulong,
+pub s6: crate::ctypes::c_ulong,
+pub s7: crate::ctypes::c_ulong,
+pub s8: crate::ctypes::c_ulong,
+pub s9: crate::ctypes::c_ulong,
+pub s10: crate::ctypes::c_ulong,
+pub s11: crate::ctypes::c_ulong,
+pub t3: crate::ctypes::c_ulong,
+pub t4: crate::ctypes::c_ulong,
+pub t5: crate::ctypes::c_ulong,
+pub t6: crate::ctypes::c_ulong,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __riscv_f_ext_state {
+pub f: [__u32; 32usize],
+pub fcsr: __u32,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __riscv_d_ext_state {
+pub f: [__u64; 32usize],
+pub fcsr: __u32,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone)]
+pub struct __riscv_q_ext_state {
+pub f: [__u64; 64usize],
+pub fcsr: __u32,
+pub reserved: [__u32; 3usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __riscv_ctx_hdr {
+pub magic: __u32,
+pub size: __u32,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone)]
+pub struct __riscv_extra_ext_header {
+pub __padding: [__u32; 129usize],
+pub reserved: __u32,
+pub hdr: __riscv_ctx_hdr,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __riscv_v_ext_state {
+pub vstart: crate::ctypes::c_ulong,
+pub vl: crate::ctypes::c_ulong,
+pub vtype: crate::ctypes::c_ulong,
+pub vcsr: crate::ctypes::c_ulong,
+pub vlenb: crate::ctypes::c_ulong,
+pub datap: *mut crate::ctypes::c_void,
+}
+#[repr(C)]
+#[derive(Debug)]
+pub struct __riscv_v_regset_state {
+pub vstart: crate::ctypes::c_ulong,
+pub vl: crate::ctypes::c_ulong,
+pub vtype: crate::ctypes::c_ulong,
+pub vcsr: crate::ctypes::c_ulong,
+pub vlenb: crate::ctypes::c_ulong,
+pub vreg: __IncompleteArrayField<crate::ctypes::c_char>,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone)]
+pub struct __sc_riscv_v_state {
+pub v_state: __riscv_v_ext_state,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub struct sigcontext {
+pub sc_regs: user_regs_struct,
+pub __bindgen_anon_1: sigcontext__bindgen_ty_1,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_sigmask: sigset_t,
+pub __unused: [__u8; 120usize],
+pub __bindgen_padding_0: u64,
+pub uc_mcontext: sigcontext,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulong,
@@ -2741,6 +2856,13 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const PTRACE_GETFDPIC: u32 = 33;
+pub const PTRACE_GETFDPIC_EXEC: u32 = 0;
+pub const PTRACE_GETFDPIC_INTERP: u32 = 1;
+pub const RISCV_MAX_VLENB: u32 = 8192;
+pub const RISCV_V_MAGIC: u32 = 1397118039;
+pub const END_MAGIC: u32 = 0;
+pub const END_HDR_SIZE: u32 = 0;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;
@@ -2921,6 +3043,21 @@ pub reserved: uffd_msg__bindgen_ty_1__bindgen_ty_5,
 #[derive(Copy, Clone)]
 pub union uffd_msg__bindgen_ty_1__bindgen_ty_1__bindgen_ty_1 {
 pub ptid: __u32,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub union __riscv_fp_state {
+pub f: __riscv_f_ext_state,
+pub d: __riscv_d_ext_state,
+pub q: __riscv_q_ext_state,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub union sigcontext__bindgen_ty_1 {
+pub sc_fpregs: __riscv_fp_state,
+pub sc_extdesc: __riscv_extra_ext_header,
 }
 impl<Storage> __BindgenBitfieldUnit<Storage> {
 #[inline]

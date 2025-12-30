@@ -67,6 +67,7 @@ pub type cc_t = crate::ctypes::c_uchar;
 pub type speed_t = crate::ctypes::c_uint;
 pub type tcflag_t = crate::ctypes::c_uint;
 pub type __fsword_t = __kernel_long_t;
+pub type __uint128_t = u128;
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct __BindgenBitfieldUnit<Storage> {
@@ -954,6 +955,107 @@ pub src: __u64,
 pub len: __u64,
 pub mode: __u64,
 pub move_: __s64,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub fault_address: __u64,
+pub regs: [__u64; 31usize],
+pub sp: __u64,
+pub pc: __u64,
+pub pstate: __u64,
+pub __bindgen_padding_0: [u8; 8usize],
+pub __reserved: [__u8; 4096usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _aarch64_ctx {
+pub magic: __u32,
+pub size: __u32,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone)]
+pub struct fpsimd_context {
+pub head: _aarch64_ctx,
+pub fpsr: __u32,
+pub fpcr: __u32,
+pub vregs: [__uint128_t; 32usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct esr_context {
+pub head: _aarch64_ctx,
+pub esr: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct poe_context {
+pub head: _aarch64_ctx,
+pub por_el0: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct extra_context {
+pub head: _aarch64_ctx,
+pub datap: __u64,
+pub size: __u32,
+pub __reserved: [__u32; 3usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sve_context {
+pub head: _aarch64_ctx,
+pub vl: __u16,
+pub flags: __u16,
+pub __reserved: [__u16; 2usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct tpidr2_context {
+pub head: _aarch64_ctx,
+pub tpidr2: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct fpmr_context {
+pub head: _aarch64_ctx,
+pub fpmr: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct za_context {
+pub head: _aarch64_ctx,
+pub vl: __u16,
+pub __reserved: [__u16; 3usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct zt_context {
+pub head: _aarch64_ctx,
+pub nregs: __u16,
+pub __reserved: [__u16; 3usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct gcs_context {
+pub head: _aarch64_ctx,
+pub gcspr: __u64,
+pub features_enabled: __u64,
+pub reserved: __u64,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_sigmask: sigset_t,
+pub __unused: [__u8; 120usize],
+pub __bindgen_padding_0: u64,
+pub uc_mcontext: sigcontext,
 }
 #[repr(C)]
 #[derive(Debug)]
@@ -2749,6 +2851,34 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const FPSIMD_MAGIC: u32 = 1179680769;
+pub const ESR_MAGIC: u32 = 1163088385;
+pub const POE_MAGIC: u32 = 1347372336;
+pub const EXTRA_MAGIC: u32 = 1163416577;
+pub const SVE_MAGIC: u32 = 1398162689;
+pub const SVE_SIG_FLAG_SM: u32 = 1;
+pub const TPIDR2_MAGIC: u32 = 1414547714;
+pub const FPMR_MAGIC: u32 = 1179667794;
+pub const ZA_MAGIC: u32 = 1412850501;
+pub const ZT_MAGIC: u32 = 1515474433;
+pub const GCS_MAGIC: u32 = 1195594496;
+pub const __SVE_VQ_BYTES: u32 = 16;
+pub const __SVE_VQ_MIN: u32 = 1;
+pub const __SVE_VQ_MAX: u32 = 512;
+pub const __SVE_VL_MIN: u32 = 16;
+pub const __SVE_VL_MAX: u32 = 8192;
+pub const __SVE_NUM_ZREGS: u32 = 32;
+pub const __SVE_NUM_PREGS: u32 = 16;
+pub const __SVE_ZREGS_OFFSET: u32 = 0;
+pub const SVE_VQ_BYTES: u32 = 16;
+pub const SVE_VQ_MIN: u32 = 1;
+pub const SVE_VQ_MAX: u32 = 512;
+pub const SVE_VL_MIN: u32 = 16;
+pub const SVE_VL_MAX: u32 = 8192;
+pub const SVE_NUM_ZREGS: u32 = 32;
+pub const SVE_NUM_PREGS: u32 = 16;
+pub const ZT_SIG_REG_SIZE: u32 = 512;
+pub const ZT_SIG_REG_BYTES: u32 = 64;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;

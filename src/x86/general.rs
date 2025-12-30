@@ -951,6 +951,194 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _fpx_sw_bytes {
+pub magic1: __u32,
+pub extended_size: __u32,
+pub xfeatures: __u64,
+pub xstate_size: __u32,
+pub padding: [__u32; 7usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _fpreg {
+pub significand: [__u16; 4usize],
+pub exponent: __u16,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _fpxreg {
+pub significand: [__u16; 4usize],
+pub exponent: __u16,
+pub padding: [__u16; 3usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _xmmreg {
+pub element: [__u32; 4usize],
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct _fpstate_32 {
+pub cw: __u32,
+pub sw: __u32,
+pub tag: __u32,
+pub ipoff: __u32,
+pub cssel: __u32,
+pub dataoff: __u32,
+pub datasel: __u32,
+pub _st: [_fpreg; 8usize],
+pub status: __u16,
+pub magic: __u16,
+pub _fxsr_env: [__u32; 6usize],
+pub mxcsr: __u32,
+pub reserved: __u32,
+pub _fxsr_st: [_fpxreg; 8usize],
+pub _xmm: [_xmmreg; 8usize],
+pub __bindgen_anon_1: _fpstate_32__bindgen_ty_1,
+pub __bindgen_anon_2: _fpstate_32__bindgen_ty_2,
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct _fpstate_64 {
+pub cwd: __u16,
+pub swd: __u16,
+pub twd: __u16,
+pub fop: __u16,
+pub rip: __u64,
+pub rdp: __u64,
+pub mxcsr: __u32,
+pub mxcsr_mask: __u32,
+pub st_space: [__u32; 32usize],
+pub xmm_space: [__u32; 64usize],
+pub reserved2: [__u32; 12usize],
+pub __bindgen_anon_1: _fpstate_64__bindgen_ty_1,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _header {
+pub xfeatures: __u64,
+pub reserved1: [__u64; 2usize],
+pub reserved2: [__u64; 5usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _ymmh_state {
+pub ymmh_space: [__u32; 64usize],
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct _xstate {
+pub fpstate: _fpstate_32,
+pub xstate_hdr: _header,
+pub ymmh: _ymmh_state,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext_32 {
+pub gs: __u16,
+pub __gsh: __u16,
+pub fs: __u16,
+pub __fsh: __u16,
+pub es: __u16,
+pub __esh: __u16,
+pub ds: __u16,
+pub __dsh: __u16,
+pub di: __u32,
+pub si: __u32,
+pub bp: __u32,
+pub sp: __u32,
+pub bx: __u32,
+pub dx: __u32,
+pub cx: __u32,
+pub ax: __u32,
+pub trapno: __u32,
+pub err: __u32,
+pub ip: __u32,
+pub cs: __u16,
+pub __csh: __u16,
+pub flags: __u32,
+pub sp_at_signal: __u32,
+pub ss: __u16,
+pub __ssh: __u16,
+pub fpstate: __u32,
+pub oldmask: __u32,
+pub cr2: __u32,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext_64 {
+pub r8: __u64,
+pub r9: __u64,
+pub r10: __u64,
+pub r11: __u64,
+pub r12: __u64,
+pub r13: __u64,
+pub r14: __u64,
+pub r15: __u64,
+pub di: __u64,
+pub si: __u64,
+pub bp: __u64,
+pub bx: __u64,
+pub dx: __u64,
+pub ax: __u64,
+pub cx: __u64,
+pub sp: __u64,
+pub ip: __u64,
+pub flags: __u64,
+pub cs: __u16,
+pub gs: __u16,
+pub fs: __u16,
+pub ss: __u16,
+pub err: __u64,
+pub trapno: __u64,
+pub oldmask: __u64,
+pub cr2: __u64,
+pub fpstate: __u64,
+pub reserved1: [__u64; 8usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub gs: __u16,
+pub __gsh: __u16,
+pub fs: __u16,
+pub __fsh: __u16,
+pub es: __u16,
+pub __esh: __u16,
+pub ds: __u16,
+pub __dsh: __u16,
+pub edi: __u32,
+pub esi: __u32,
+pub ebp: __u32,
+pub esp: __u32,
+pub ebx: __u32,
+pub edx: __u32,
+pub ecx: __u32,
+pub eax: __u32,
+pub trapno: __u32,
+pub err: __u32,
+pub eip: __u32,
+pub cs: __u16,
+pub __csh: __u16,
+pub eflags: __u32,
+pub esp_at_signal: __u32,
+pub ss: __u16,
+pub __ssh: __u16,
+pub fpstate: *mut _fpstate_32,
+pub oldmask: __u32,
+pub cr2: __u32,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: sigcontext,
+pub uc_sigmask: sigset_t,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulonglong,
@@ -2913,6 +3101,10 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const FP_XSTATE_MAGIC1: u32 = 1179670611;
+pub const FP_XSTATE_MAGIC2: u32 = 1179670597;
+pub const X86_FXSR_MAGIC: u32 = 0;
+pub const UC_FP_XSTATE: u32 = 1;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;
@@ -3102,6 +3294,24 @@ pub reserved: uffd_msg__bindgen_ty_1__bindgen_ty_5,
 #[derive(Copy, Clone)]
 pub union uffd_msg__bindgen_ty_1__bindgen_ty_1__bindgen_ty_1 {
 pub ptid: __u32,
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub union _fpstate_32__bindgen_ty_1 {
+pub padding1: [__u32; 44usize],
+pub padding: [__u32; 44usize],
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub union _fpstate_32__bindgen_ty_2 {
+pub padding2: [__u32; 12usize],
+pub sw_reserved: _fpx_sw_bytes,
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub union _fpstate_64__bindgen_ty_1 {
+pub reserved3: [__u32; 12usize],
+pub sw_reserved: _fpx_sw_bytes,
 }
 impl<Storage> __BindgenBitfieldUnit<Storage> {
 #[inline]

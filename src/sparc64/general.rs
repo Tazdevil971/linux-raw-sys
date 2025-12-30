@@ -66,6 +66,10 @@ pub type sigevent_t = sigevent;
 pub type cc_t = crate::ctypes::c_uchar;
 pub type speed_t = crate::ctypes::c_uint;
 pub type tcflag_t = crate::ctypes::c_uint;
+pub type mc_greg_t = crate::ctypes::c_ulong;
+pub type mc_gregset_t = [mc_greg_t; 19usize];
+pub type mc_fpu_t = mc_fpu;
+pub type ucontext_t = ucontext;
 pub type __fsword_t = __kernel_long_t;
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -970,6 +974,45 @@ pub src: __u64,
 pub len: __u64,
 pub mode: __u64,
 pub move_: __s64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct mc_fq {
+pub mcfq_addr: *mut crate::ctypes::c_ulong,
+pub mcfq_insn: crate::ctypes::c_uint,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub struct mc_fpu {
+pub mcfpu_fregs: mc_fpu__bindgen_ty_1,
+pub mcfpu_fsr: crate::ctypes::c_ulong,
+pub mcfpu_fprs: crate::ctypes::c_ulong,
+pub mcfpu_gsr: crate::ctypes::c_ulong,
+pub mcfpu_fq: *mut mc_fq,
+pub mcfpu_qcnt: crate::ctypes::c_uchar,
+pub mcfpu_qentsz: crate::ctypes::c_uchar,
+pub mcfpu_enab: crate::ctypes::c_uchar,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub struct mcontext_t {
+pub mc_gregs: mc_gregset_t,
+pub mc_fp: mc_greg_t,
+pub mc_i7: mc_greg_t,
+pub __bindgen_padding_0: u64,
+pub mc_fpregs: mc_fpu_t,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub struct ucontext {
+pub uc_link: *mut ucontext,
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_sigmask: sigset_t,
+pub __bindgen_padding_0: u64,
+pub uc_mcontext: mcontext_t,
 }
 #[repr(C)]
 #[derive(Debug)]
@@ -2886,6 +2929,27 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const MC_TSTATE: u32 = 0;
+pub const MC_PC: u32 = 1;
+pub const MC_NPC: u32 = 2;
+pub const MC_Y: u32 = 3;
+pub const MC_G1: u32 = 4;
+pub const MC_G2: u32 = 5;
+pub const MC_G3: u32 = 6;
+pub const MC_G4: u32 = 7;
+pub const MC_G5: u32 = 8;
+pub const MC_G6: u32 = 9;
+pub const MC_G7: u32 = 10;
+pub const MC_O0: u32 = 11;
+pub const MC_O1: u32 = 12;
+pub const MC_O2: u32 = 13;
+pub const MC_O3: u32 = 14;
+pub const MC_O4: u32 = 15;
+pub const MC_O5: u32 = 16;
+pub const MC_O6: u32 = 17;
+pub const MC_O7: u32 = 18;
+pub const MC_NGREG: u32 = 19;
+pub const MC_MAXFPQ: u32 = 16;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;
@@ -3065,6 +3129,14 @@ pub reserved: uffd_msg__bindgen_ty_1__bindgen_ty_5,
 #[derive(Copy, Clone)]
 pub union uffd_msg__bindgen_ty_1__bindgen_ty_1__bindgen_ty_1 {
 pub ptid: __u32,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Copy, Clone)]
+pub union mc_fpu__bindgen_ty_1 {
+pub sregs: [crate::ctypes::c_uint; 32usize],
+pub dregs: [crate::ctypes::c_ulong; 32usize],
+pub qregs: [u128; 16usize],
 }
 impl<Storage> __BindgenBitfieldUnit<Storage> {
 #[inline]

@@ -955,6 +955,45 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct pt_regs {
+pub tls: crate::ctypes::c_ulong,
+pub lr: crate::ctypes::c_ulong,
+pub pc: crate::ctypes::c_ulong,
+pub sr: crate::ctypes::c_ulong,
+pub usp: crate::ctypes::c_ulong,
+pub orig_a0: crate::ctypes::c_ulong,
+pub a0: crate::ctypes::c_ulong,
+pub a1: crate::ctypes::c_ulong,
+pub a2: crate::ctypes::c_ulong,
+pub a3: crate::ctypes::c_ulong,
+pub regs: [crate::ctypes::c_ulong; 10usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct user_fp {
+pub vr: [crate::ctypes::c_ulong; 96usize],
+pub fcr: crate::ctypes::c_ulong,
+pub fesr: crate::ctypes::c_ulong,
+pub fid: crate::ctypes::c_ulong,
+pub reserved: crate::ctypes::c_ulong,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub sc_pt_regs: pt_regs,
+pub sc_user_fp: user_fp,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: sigcontext,
+pub uc_sigmask: sigset_t,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulonglong,

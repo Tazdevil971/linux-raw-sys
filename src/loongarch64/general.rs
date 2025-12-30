@@ -955,6 +955,62 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[repr(align(16))]
+#[derive(Debug)]
+pub struct sigcontext {
+pub sc_pc: __u64,
+pub sc_regs: [__u64; 32usize],
+pub sc_flags: __u32,
+pub sc_extcontext: __IncompleteArrayField<__u64>,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sctx_info {
+pub magic: __u32,
+pub size: __u32,
+pub padding: __u64,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct fpu_context {
+pub regs: [__u64; 32usize],
+pub fcc: __u64,
+pub fcsr: __u32,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lsx_context {
+pub regs: [__u64; 64usize],
+pub fcc: __u64,
+pub fcsr: __u32,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lasx_context {
+pub regs: [__u64; 128usize],
+pub fcc: __u64,
+pub fcsr: __u32,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lbt_context {
+pub regs: [__u64; 4usize],
+pub eflags: __u32,
+pub ftop: __u32,
+}
+#[repr(C)]
+#[repr(align(16))]
+#[derive(Debug)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_sigmask: sigset_t,
+pub __unused: [__u8; 120usize],
+pub __bindgen_padding_0: u64,
+pub uc_mcontext: sigcontext,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulong,
@@ -2736,6 +2792,18 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const SC_USED_FP: u32 = 1;
+pub const SC_ADDRERR_RD: u32 = 1073741824;
+pub const SC_ADDRERR_WR: u32 = 2147483648;
+pub const CONTEXT_INFO_ALIGN: u32 = 16;
+pub const FPU_CTX_MAGIC: u32 = 1179669761;
+pub const FPU_CTX_ALIGN: u32 = 8;
+pub const LSX_CTX_MAGIC: u32 = 1398276097;
+pub const LSX_CTX_ALIGN: u32 = 16;
+pub const LASX_CTX_MAGIC: u32 = 1095981057;
+pub const LASX_CTX_ALIGN: u32 = 32;
+pub const LBT_CTX_MAGIC: u32 = 1112801281;
+pub const LBT_CTX_ALIGN: u32 = 8;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;

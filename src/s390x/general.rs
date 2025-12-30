@@ -971,6 +971,66 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _psw_t {
+pub mask: crate::ctypes::c_ulong,
+pub addr: crate::ctypes::c_ulong,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _s390_regs_common {
+pub psw: _psw_t,
+pub gprs: [crate::ctypes::c_ulong; 16usize],
+pub acrs: [crate::ctypes::c_uint; 16usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _s390_fp_regs {
+pub fpc: crate::ctypes::c_uint,
+pub pad: crate::ctypes::c_uint,
+pub fprs: [f64; 16usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _sigregs {
+pub regs: _s390_regs_common,
+pub fpregs: _s390_fp_regs,
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct _sigregs_ext {
+pub vxrs_low: [crate::ctypes::c_ulonglong; 16usize],
+pub vxrs_high: [__vector128; 16usize],
+pub __reserved: [crate::ctypes::c_uchar; 128usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub oldmask: [crate::ctypes::c_ulong; 1usize],
+pub sregs: *mut _sigregs,
+}
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct ucontext_extended {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: _sigregs,
+pub uc_sigmask: sigset_t,
+pub __unused: [crate::ctypes::c_uchar; 120usize],
+pub uc_mcontext_ext: _sigregs_ext,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: _sigregs,
+pub uc_sigmask: sigset_t,
+pub __unused: [crate::ctypes::c_uchar; 120usize],
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulong,
@@ -2802,6 +2862,18 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const __NUM_GPRS: u32 = 16;
+pub const __NUM_FPRS: u32 = 16;
+pub const __NUM_ACRS: u32 = 16;
+pub const __NUM_VXRS: u32 = 32;
+pub const __NUM_VXRS_LOW: u32 = 16;
+pub const __NUM_VXRS_HIGH: u32 = 16;
+pub const _SIGCONTEXT_NSIG: u32 = 64;
+pub const _SIGCONTEXT_NSIG_BPW: u32 = 64;
+pub const __SIGNAL_FRAMESIZE: u32 = 160;
+pub const _SIGCONTEXT_NSIG_WORDS: u32 = 1;
+pub const UC_GPRS_HIGH: u32 = 1;
+pub const UC_VXRS: u32 = 2;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;

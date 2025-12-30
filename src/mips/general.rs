@@ -985,6 +985,51 @@ pub mode: __u64,
 pub move_: __s64,
 }
 #[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sigcontext {
+pub sc_regmask: crate::ctypes::c_uint,
+pub sc_status: crate::ctypes::c_uint,
+pub sc_pc: crate::ctypes::c_ulonglong,
+pub sc_regs: [crate::ctypes::c_ulonglong; 32usize],
+pub sc_fpregs: [crate::ctypes::c_ulonglong; 32usize],
+pub sc_acx: crate::ctypes::c_uint,
+pub sc_fpc_csr: crate::ctypes::c_uint,
+pub sc_fpc_eir: crate::ctypes::c_uint,
+pub sc_used_math: crate::ctypes::c_uint,
+pub sc_dsp: crate::ctypes::c_uint,
+pub sc_mdhi: crate::ctypes::c_ulonglong,
+pub sc_mdlo: crate::ctypes::c_ulonglong,
+pub sc_hi1: crate::ctypes::c_ulong,
+pub sc_lo1: crate::ctypes::c_ulong,
+pub sc_hi2: crate::ctypes::c_ulong,
+pub sc_lo2: crate::ctypes::c_ulong,
+pub sc_hi3: crate::ctypes::c_ulong,
+pub sc_lo3: crate::ctypes::c_ulong,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct extcontext {
+pub magic: crate::ctypes::c_uint,
+pub size: crate::ctypes::c_uint,
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct msa_extcontext {
+pub ext: extcontext,
+pub wr: [crate::ctypes::c_ulonglong; 32usize],
+pub csr: crate::ctypes::c_uint,
+}
+#[repr(C)]
+#[derive(Debug)]
+pub struct ucontext {
+pub uc_flags: crate::ctypes::c_ulong,
+pub uc_link: *mut ucontext,
+pub uc_stack: stack_t,
+pub uc_mcontext: sigcontext,
+pub uc_sigmask: sigset_t,
+pub uc_extcontext: __IncompleteArrayField<crate::ctypes::c_ulonglong>,
+}
+#[repr(C)]
 #[derive(Debug)]
 pub struct linux_dirent64 {
 pub d_ino: crate::ctypes::c_ulonglong,
@@ -3046,6 +3091,12 @@ pub const UFFD_FEATURE_POISON: u32 = 16384;
 pub const UFFD_FEATURE_WP_ASYNC: u32 = 32768;
 pub const UFFD_FEATURE_MOVE: u32 = 65536;
 pub const UFFD_USER_MODE_ONLY: u32 = 1;
+pub const USED_FP: u32 = 1;
+pub const USED_FR1: u32 = 2;
+pub const USED_HYBRID_FPRS: u32 = 4;
+pub const USED_EXTCONTEXT: u32 = 8;
+pub const MSA_EXTCONTEXT_MAGIC: u32 = 2018333505;
+pub const END_EXTCONTEXT_MAGIC: u32 = 2017807940;
 pub const DT_UNKNOWN: u32 = 0;
 pub const DT_FIFO: u32 = 1;
 pub const DT_CHR: u32 = 2;
